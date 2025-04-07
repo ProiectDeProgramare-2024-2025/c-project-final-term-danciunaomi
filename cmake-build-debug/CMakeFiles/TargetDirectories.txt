@@ -1,0 +1,3 @@
+D:/proiect programare/ProiectStock/cmake-build-debug/CMakeFiles/ProiectStock.dir
+D:/proiect programare/ProiectStock/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/proiect programare/ProiectStock/cmake-build-debug/CMakeFiles/rebuild_cache.dir
