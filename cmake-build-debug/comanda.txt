@@ -1,2 +1,4 @@
+Produs/Cantitate
 banane/12
 banane/10
+cafea/1

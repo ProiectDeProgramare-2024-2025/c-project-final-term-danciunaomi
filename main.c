@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #define TOTAL 2000
+typedef struct {
+    char produs[256];
+    int cantitate;
+} Comanda;
 
 // Imi afisez optiunile din meniu
 int menu() {
@@ -36,8 +40,8 @@ void adaugare_in_fisier(char produs[256], char tara[20], int cantitate, char des
 //Editeaza produsul
 void editare_produs() {
     char produs[256];
-    printf("Introduceti numele prousului pe care doriti sa-l editati:");
-    scanf("%s", &produs); // Utilizatorul introduce denumirea produsului
+    printf("Introduceti \033[1;31mnumele\033[0m prousului pe care doriti sa-l editati:");
+    scanf("%s", &produs);
     int raspuns;
     char new_produs[256];
     char new_cantitate[10];
@@ -51,31 +55,31 @@ void editare_produs() {
     char continut_final[TOTAL];
 
 
-    printf("Vrei sa editezi numele produsului?\n");
+    printf("Vrei sa editezi \033[1;31mnumele\033[0m produsului?\n");
     printf("1.Da\n");
     printf("2.Nu\n");
-    scanf("%d", &raspuns); //Utilizatorul introduce da sau nu
+    scanf("%d", &raspuns);
     getchar(); //Se elimina \n character ramas in raspunsul introdus de utilizator
 
     if (raspuns==1)
     {
-        printf("Introdu noul nume de produs:\n");
-        fgets(new_produs, sizeof(new_produs), stdin); //Utilizatorul introduce numele dorit
+        printf("Introdu noul \033[1;31mnume\033[0m de produs:\n");
+        fgets(new_produs, sizeof(new_produs), stdin);
         new_produs[strcspn(new_produs, "\n")] = 0; //Sterge \n character pt a fi datele scrise corect in fisier
     }
     else
     {
         strcpy(new_produs, produs);
     }
-    printf("Vrei sa editezi cantitatea produsului?:\n");
+    printf("Vrei sa editezi \033[1;32mcantitatea\033[0m produsului?:\n");
     printf("1.Da\n");
     printf("2.Nu\n");
-    scanf("%d", &raspuns); //Utilizatorul introduce da sau nu
+    scanf("%d", &raspuns);
     getchar(); //Se elimina \n character de la sfarsitul raspunsului introdus de utilizator
     if (raspuns==1)
     {
-        printf("Introdu cantitatea dorita a produs:\n");
-        fgets(new_cantitate, sizeof(new_cantitate), stdin); //Utilizatorul introduce cantitatea
+        printf("Introdu \033[1;32mcantitatea\033[0m dorita a produs:\n");
+        fgets(new_cantitate, sizeof(new_cantitate), stdin);
         new_cantitate[strcspn(new_cantitate, "\n")] = 0; //Se elimina \n character pentru a fi datele scrise corect in fisier
 
     }
@@ -83,30 +87,30 @@ void editare_produs() {
     {
         strcpy(new_cantitate, "");
     }
-    printf("Vrei sa editezi tara produsului?:\n");
+    printf("Vrei sa editezi \033[1;34mtara\033[0m produsului?:\n");
     printf("1.Da\n");
     printf("2.Nu\n");
-    scanf("%d", &raspuns); //Utilizatorul introduce da sau nu
+    scanf("%d", &raspuns);
     getchar(); //Se elimina \n character de la sfarsitul raspunsului introdus de utiliator
     if (raspuns==1)
     {
-        printf("Introdu tara dorita pentru produs\n");
-        fgets(new_tara, sizeof(new_tara), stdin); //Utilizatorul introduce tara
+        printf("Introdu \033[1;34mtara\033[0m dorita pentru produs\n");
+        fgets(new_tara, sizeof(new_tara), stdin);
         new_tara[strcspn(new_tara, "\n")] = 0; //Se elimina \n character pentru a fi datele scrise frumos in fisier
     }
     else
     {
         strcpy(new_tara, "");
     }
-    printf("Vrei sa editeti descrierea produsului?\n");
+    printf("Vrei sa editeti \033[1;33mdescrierea\033[0m produsului?\n");
     printf("1.Da\n");
     printf("2.Nu\n");
-    scanf("%d", &raspuns); //Utilizatorul introduce da sau nu
+    scanf("%d", &raspuns);
     getchar(); //Se elimina \n character de la raspunsul introdus
     if (raspuns==1)
     {
-        printf("Introdu descrierea dorita pentru produs\n");
-        fgets(new_descriere, sizeof(new_descriere), stdin); //Utilizatorul introduce descrierea
+        printf("Introdu \033[1;33mdescrierea\033[0m dorita pentru produs\n");
+        fgets(new_descriere, sizeof(new_descriere), stdin);
         new_descriere[strcspn(new_descriere, "\n")] = 0; //Se elimina \n character pentru a fi datele scrise corect in fisier
     }
     else
@@ -218,10 +222,10 @@ int afisarea_detalii_produs(char linie[TOTAL]) {
     }
 
 
-    printf("Produsul este: %s\n", produs);
-    printf("Cantitatea este: %s\n", cantitate);
-    printf("Tara este: %s\n", tara);
-    printf("Descriere: %s\n", descriere);
+    printf("Produsul este: \033[1;31m%s\033[0m\n", produs);
+    printf("Cantitatea este: \033[1;32m%s\033[0m\n", cantitate);
+    printf("Tara este: \033[1;34m%s\033[0m\n", tara);
+    printf("Descriere: \033[1;33m%s\033[0m\n", descriere);
 
 
     int numar = atoi(cantitate);
@@ -237,6 +241,7 @@ int cautare_produs_nume(char produs[256])
     int cantitate = 0;
 
 
+
     while (fgets(linie,TOTAL,f) != NULL) {
         strcpy(linie_copy, linie);
         char *produs_fisier = strtok(linie_copy,"/");
@@ -246,17 +251,22 @@ int cautare_produs_nume(char produs[256])
             break;
         }
     }
+
+
     fclose(f);
 
     return cantitate;
 }
+
 
 //Cauta produsul dupa tara
 void cautare_produs_tara() {
     FILE *f = fopen("stock.txt", "r");
     char linie[TOTAL];
     char linie_copy[TOTAL];
-    printf("Introdu tara produsului pe care doriti sa il cautati: ");
+    int count =0;
+    printf("Introdu \033[1;34mtara\033[0m produsului pe care doriti sa il cautati: ");
+
     char tara[20];
     scanf("%s", tara);
 
@@ -276,14 +286,22 @@ void cautare_produs_tara() {
         if (strcmp(tara_fisier,tara) == 0)
         {
             afisarea_detalii_produs(linie);
+            count = 1;
         }
 
+
     }
+
+    if (count == 0) {
+        printf("Nu s-a gasit niciun produs cu tara introdusa");
+    }
+
     getchar();
 }
 
 //Se realizeaza comanda produsului
 void comanda_produs() {
+    Comanda c;
     int raspuns;
     int cantitate_dorita;
     int cantitate_dupa_comanda;
@@ -292,96 +310,102 @@ void comanda_produs() {
     char new_cantitate[10];
     char new_tara[20];
     char new_descriere[200];
-    char continut1[TOTAL];
-    char continut2[TOTAL];
-    char continut3[TOTAL];
-    char continut4[TOTAL];
-    char continut5[TOTAL];
     char continut_final[TOTAL];
 
 
 
-    printf("Introdu numele produsului pe care doriti sa il cautati:");
-    char produs[256];
-    scanf("%s", produs);
+    printf("Introdu \033[1;31mnumele\033[0m produsului pe care doriti sa il cautati:");
+    fgets(c.produs, sizeof(c.produs), stdin);
+    c.produs[strcspn(c.produs, "\n")] = 0;
 
-    int cantitate_produs_int = cautare_produs_nume(produs);
+    int cantitate_produs_int = cautare_produs_nume(c.produs);
 
-    printf("Introdu cantitatea dorita:\n");
-    scanf("%d", &cantitate_dorita);
+    while (cantitate_produs_int == 0) {
+        printf("Produsul nu se afla in stoc. Introdu un produs existent in stoc: ");
+        fgets(c.produs, sizeof(c.produs), stdin);
+        c.produs[strcspn(c.produs, "\n")] = 0;
+        cantitate_produs_int = cautare_produs_nume(c.produs);
+    }
+
+    printf("Introdu \033[1;32mcantitatea\033[0m dorita:\n");
+    scanf("%d", &c.cantitate);
     getchar();
+    while (c.cantitate <= 0 || c.cantitate> cantitate_produs_int) {
+
+        printf("Cantitatea introdusa nu este valida(cantitatea introdusa depaseste stocul magazinului).\n");
+        printf("Introdu din nou cantitatea dorita: ");
+        scanf("%d", &c.cantitate);
+        getchar();
+    }
 
     printf("Doriti sa plasati comanda\n");
     printf("1.Da\n");
     printf("2.Nu\n");
     scanf("%d", &raspuns);
     getchar();
-    if (raspuns == 1)
-    {
-        cantitate_dupa_comanda = cantitate_produs_int - cantitate_dorita;
+
+    while (raspuns != 1 && raspuns != 2) {
+        printf("Introdu un raspuns valid (1 sau 2)");
+        scanf("%d", &raspuns);
+        getchar();
+    }
+
+    if(raspuns == 1) {
+        cantitate_dupa_comanda = cantitate_produs_int - c.cantitate;
         sprintf(cantitate_dupa_comanda_char, "%d",cantitate_dupa_comanda);
+
         FILE *read = fopen("stock.txt", "r");
         FILE *write = fopen("stock2.txt", "w");
         char linie[TOTAL];
         char linie_copy[TOTAL];
 
-        while (fgets(linie,TOTAL,read) != NULL) {
+
+        while (fgets(linie, TOTAL, read) != NULL) {
             strcpy(linie_copy, linie);
-            char *tok= strtok(linie_copy,"/");
-            if (strcmp(tok,produs) != 0)
-            {
+            char *tok = strtok(linie_copy, "/");
+
+            if (strcmp(tok, c.produs) != 0) {
+                // produs diferit -> copiem linia originala
                 fprintf(write, "%s", linie);
-            }
-            else
-            {
-                strcpy(new_produs,  tok);
-                tok= strtok(NULL, "/");
+            } else {
+                // produs gasit -> inlocuim cantitatea
+                strcpy(new_produs, tok);
+
+                tok = strtok(NULL, "/"); // cantitatea veche – ignorata
                 strcpy(new_cantitate, cantitate_dupa_comanda_char);
-                tok= strtok(NULL, "/");
+
+                tok = strtok(NULL, "/"); // tara
                 strcpy(new_tara, tok);
-                tok= strtok(NULL, "/");
+
+                tok = strtok(NULL, "/"); // descriere
                 strcpy(new_descriere, tok);
-                new_descriere[sizeof(new_descriere) - 1] = '\0';
+                new_descriere[strcspn(new_descriere, "\n")] = 0;
 
-                strncpy(continut1 , strcat(new_produs, "/"), sizeof(continut1) - 1);
-
-                strncpy(continut2 , strcat(continut1, new_cantitate), sizeof(continut2) - 1);
-
-                strncpy(continut3 , strcat(continut2, "/"), sizeof(continut3) - 1);
-
-                strncpy(continut4, strcat(continut3, new_tara), sizeof(continut4) - 1 );
-
-                strncpy(continut5, strcat(continut4, "/"), sizeof(continut5) - 1);
-
-                strncpy(continut_final, strcat(continut5, new_descriere), sizeof(continut_final) - 1);
-
+                // scriere linie actualizata
+                snprintf(continut_final, TOTAL, "%s/%s/%s/%s\n", new_produs, new_cantitate, new_tara, new_descriere);
                 fprintf(write, "%s", continut_final);
             }
         }
-
         fclose(read);
         fclose(write);
-        char produs_comandat[TOTAL];
-        sprintf(produs_comandat, "%d", cantitate_dorita);
-        strcat(produs, "/");
-        strcat(produs, produs_comandat);
+
+
+        remove("stock.txt");
+        rename("stock2.txt", "stock.txt");
+
+        // Salvare comanda în fisier
         FILE *comanda = fopen("comanda.txt", "a");
-        fprintf(comanda, "%s\n", produs);
+        fprintf(comanda, "%s/%d\n", c.produs, c.cantitate);
         fclose(comanda);
 
+        printf("Comanda a fost plasata cu succes!\n");
     }
-
-    remove("stock.txt");
-    rename("stock2.txt", "stock.txt");
-
-
-
 
 }
 
 //Sterge produsul dorit
 int stergere_produs() {
-    printf("Introdu numele produsul pe care doriti sa il stergeti:");
+    printf("Introdu \033[1;31mnumele\033[0m produsul pe care doriti sa il stergeti: ");
     char produs[256];
     int total = 256 * sizeof(char) + 20 * sizeof(char) + 200 * sizeof(char) + sizeof(int) + 3 * sizeof(char);
     scanf("%s", produs);
@@ -419,22 +443,25 @@ int adauga_produs() {
     int cantitate;
 
     // Citirea produsului
-    printf("\nIntroduceti produsul: ");
+    printf("\nIntroduceti \033[1;31mnumele\033[0m produsului: ");
+
     fgets(produs, sizeof(produs), stdin);
     produs[strcspn(produs, "\n")] = 0;  // Elimină newline-ul dacă există
 
     // Citirea cantității
-    printf("\nIntroduceti cantitatea produsului: ");
+    printf("\nIntroduceti \033[1;32mcantitatea\033[0m produsului: ");
+
     scanf("%d", &cantitate);
     getchar();  // Consumă newline-ul lăsat de scanf
 
     // Citirea țării
-    printf("\nIntroduceti tara produsului: ");
+    printf("\nIntroduceti \033[1;34mtara\033[0m produsului: ");
+
     fgets(tara, sizeof(tara), stdin);
     tara[strcspn(tara, "\n")] = 0;  // Elimină newline-ul dacă există
 
     // Citirea descrierii
-    printf("\nIntroduceti descrierea produsului: ");
+    printf("\nIntroduceti \033[1;33mdescrierea\033[0m produsului: ");
     fgets(descriere, sizeof(descriere), stdin);
     descriere[strcspn(descriere, "\n")] = 0;  // Elimină newline-ul dacă există
 
@@ -488,11 +515,15 @@ int main(void) {
             case 5:
                 char produs[256];
                 printf("--- Cautare Produs Dupa Nume ---\n");
-                printf("Introduceti numele produsului cautat\n");
+                printf("Introduceti \033[1;31mnumele\033[0m produsului cautat: \n");
+
                 scanf("%s", produs);
                 getchar();
                 printf("\n");
-                cautare_produs_nume(produs);
+                int x = cautare_produs_nume(produs);
+                if(x == 0) {
+                    printf("Produsul nu se afla in stoc.\n");
+                }
                 printf("--------------------------------\n");
                 printf("Apasa pe ENTER pentru a continua.");
                 getchar();
